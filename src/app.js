@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const Restaurant = require("../models/index");
+const { Restaurant, Menu, Item } = require("../models/index");
 const db = require("../db/connection");
 
 app.use(express.urlencoded({ extended: true }));
@@ -9,7 +9,10 @@ app.use(express.json());
 //TODO: Create your GET Request Route Below:
 app.get("/restaurants", async (req, res, next) => {
   try {
-    const restaurants = await Restaurant.findAll();
+    const restaurants = await Restaurant.findAll(
+      { include: Menu },
+      { include: [{ model: Menu, include: [{ model: Item }] }] }
+    );
     res.json(restaurants);
   } catch (e) {
     next(e);
