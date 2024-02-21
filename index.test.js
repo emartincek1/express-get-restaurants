@@ -72,4 +72,14 @@ describe("Server Tests", () => {
     const restaurants = await Restaurant.findAll();
     expect(response.body.length).toBe(restaurants.length);
   });
+
+  test("post restaurants returns errors array if feilds aren't provided", async () => {
+    const response = await request(app)
+      .post("/restaurants")
+      .send({
+        restaurant: { name: "qwe" },
+      });
+    expect(response.body).toHaveProperty("error");
+    expect(Array.isArray(response.body.error)).toBe(true);
+  });
 });
